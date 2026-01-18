@@ -1,393 +1,270 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, Mail, Github, Linkedin, Download, ChevronDown, Wrench, Cpu, Box, FileText, Send } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Box, Cpu, FileText, Wrench, ChevronDown, ChevronUp } from 'lucide-react';
 
-export default function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const [formStatus, setFormStatus] = useState('');
+export default function PortfolioCMS() {
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [expandedProject, setExpandedProject] = useState(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-      
-      const sections = ['home', 'about', 'projects', 'skills', 'contact'];
-      const current = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (current) setActiveSection(current);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setFormStatus('sending');
-
-    try {
-      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          service_id: 'service_zbqgrk8',
-          template_id: 'template_e5xhmtb',
-          user_id: 'AgRIIQTGiGlh_8A8s',
-          template_params: {
-            from_name: formData.name,
-            from_email: formData.email,
-            subject: formData.subject,
-            message: formData.message,
-          }
-        })
-      });
-
-      if (response.ok) {
-        setFormStatus('success');
-        setFormData({ name: '', email: '', subject: '', message: '' });
-        setTimeout(() => setFormStatus(''), 3000);
-      } else {
-        setFormStatus('error');
-      }
-    } catch (error) {
-      setFormStatus('error');
-    }
-  };
+  const categories = [
+    { id: 'all', name: 'All Projects', icon: null },
+    { id: '3d-modeling', name: '3D Modeling', icon: Box, color: 'from-blue-500 to-cyan-500' },
+    { id: 'electronics', name: 'Electronics', icon: Cpu, color: 'from-purple-500 to-pink-500' },
+    { id: 'documentation', name: 'Documentation', icon: FileText, color: 'from-orange-500 to-red-500' },
+    { id: 'engineering', name: 'Engineering', icon: Wrench, color: 'from-green-500 to-emerald-500' }
+  ];
 
   const projects = [
     {
-      title: "3D Mechanical Design",
-      category: "3D Modelling",
-      icon: Box,
-      description: "Advanced CAD designs and mechanical assemblies",
-      color: "from-blue-500 to-cyan-500"
+      id: 1,
+      category: '3d-modeling',
+      title: 'Advanced Robotic Arm',
+      subtitle: 'JD Modeling',
+      description: 'Auymeetic Add designe and regimacal, asserntics',
+      image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=600&fit=crop',
+      fullDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel viverra erat, id ornare mauris. Vivamus placerat sapien non commodo iaculis. Aliquam erat volutpat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.',
+      details: ['CAD Software: SolidWorks', 'Completion: December 2023', 'Materials: Aluminum Alloy', 'Precision: ±0.01mm']
     },
     {
-      title: "Circuit Design",
-      category: "Electronics",
-      icon: Cpu,
-      description: "PCB layouts and electronic system designs",
-      color: "from-purple-500 to-pink-500"
+      id: 2,
+      category: '3d-modeling',
+      title: 'Mechanical Assembly Design',
+      subtitle: 'Complex Systems',
+      description: 'Multi-part assembly with precision engineering',
+      image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&h=600&fit=crop',
+      fullDescription: 'Comprehensive mechanical assembly featuring advanced CAD techniques and precision manufacturing specifications. This project demonstrates expertise in complex multi-part systems and engineering optimization.',
+      details: ['Parts: 47 components', 'Software: Fusion 360', 'Tolerances: ISO 2768-m', 'Assembly Time: 3 weeks']
     },
     {
-      title: "Engineering Reports",
-      category: "Documentation",
-      icon: FileText,
-      description: "Technical documentation and analysis reports",
-      color: "from-orange-500 to-red-500"
+      id: 3,
+      category: 'electronics',
+      title: 'IoT Sensor Network',
+      subtitle: 'Eleeconec',
+      description: 'FUB lgynns and leections system designs',
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop',
+      fullDescription: 'Distributed sensor network utilizing ESP32 microcontrollers for real-time environmental monitoring. Features low-power design, wireless communication, and cloud integration for data analytics.',
+      details: ['Microcontroller: ESP32', 'Sensors: 12 nodes', 'Power: Solar + Battery', 'Range: 500m']
     },
     {
-      title: "Prototype Development",
-      category: "Engineering",
-      icon: Wrench,
-      description: "From concept to working prototype",
-      color: "from-green-500 to-emerald-500"
+      id: 4,
+      category: 'electronics',
+      title: 'Power Supply Unit',
+      subtitle: 'Circuit Design',
+      description: 'High-efficiency switching power supply',
+      image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop',
+      fullDescription: 'Custom-designed switching power supply with 95% efficiency, featuring advanced thermal management and protection circuits. Designed for industrial applications requiring high reliability.',
+      details: ['Output: 24V, 10A', 'Efficiency: 95%', 'Protection: OVP, OCP, OTP', 'PCB: 4-layer design']
+    },
+    {
+      id: 5,
+      category: 'documentation',
+      title: 'Engineering Standards Manual',
+      subtitle: 'Doointerledion',
+      description: 'Toinmual decumentation and anabolscreens',
+      image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop',
+      fullDescription: 'Comprehensive technical documentation establishing engineering standards and best practices. Includes detailed specifications, testing procedures, and quality assurance protocols for manufacturing processes.',
+      details: ['Pages: 247', 'Standards: ISO 9001', 'Revisions: Quarterly', 'Format: PDF + Interactive']
+    },
+    {
+      id: 6,
+      category: 'documentation',
+      title: 'Project Analysis Report',
+      subtitle: 'Technical Analysis',
+      description: 'Detailed feasibility and performance analysis',
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop',
+      fullDescription: 'In-depth analysis of project feasibility, cost-benefit evaluation, and performance metrics. Includes risk assessment, timeline projections, and resource allocation recommendations.',
+      details: ['Sections: 8 chapters', 'Graphs: 34 visualizations', 'Data Points: 1,200+', 'Duration: 6 months study']
+    },
+    {
+      id: 7,
+      category: 'engineering',
+      title: 'Automated Sorting System',
+      subtitle: 'Enorreuing',
+      description: 'Tram reneeet to working plololyse',
+      image: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?w=800&h=600&fit=crop',
+      fullDescription: 'Fully automated sorting and categorization system utilizing computer vision and pneumatic actuators. Processes up to 100 items per minute with 99.7% accuracy.',
+      details: ['Throughput: 100 items/min', 'Accuracy: 99.7%', 'Vision: OpenCV', 'Actuators: 6 pneumatic']
+    },
+    {
+      id: 8,
+      category: 'engineering',
+      title: 'Hydraulic Test Rig',
+      subtitle: 'Prototype Testing',
+      description: 'Custom test bench for component validation',
+      image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&h=600&fit=crop',
+      fullDescription: 'Purpose-built hydraulic testing apparatus for validating component performance under various pressure and flow conditions. Features real-time data acquisition and automated test sequences.',
+      details: ['Pressure: 0-350 bar', 'Flow: 0-100 L/min', 'Sensors: 16 channels', 'Control: PLC-based']
     }
   ];
 
-  const skills = [
-    { name: "CAD/CAM", level: 90 },
-    { name: "Circuit Design", level: 85 },
-    { name: "3D Modelling", level: 92 },
-    { name: "Technical Writing", level: 88 },
-    { name: "Prototyping", level: 80 },
-    { name: "Problem Solving", level: 95 }
-  ];
+  const filteredProjects = activeCategory === 'all' 
+    ? projects 
+    : projects.filter(p => p.category === activeCategory);
+
+  const toggleExpand = (projectId) => {
+    setExpandedProject(expandedProject === projectId ? null : projectId);
+  };
+
+  // Organize projects with expansion logic - works for both mobile and desktop
+  const renderProjects = () => {
+    const elements = [];
+    
+    filteredProjects.forEach((project, index) => {
+      // Add the project card
+      elements.push({ type: 'card', project: project, index: index });
+      
+      // If this project is expanded, add expansion panel right after it
+      if (expandedProject === project.id) {
+        elements.push({ type: 'expanded', project: project });
+      }
+    });
+    
+    return elements;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-      {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-slate-900/95 backdrop-blur-lg shadow-lg' : 'bg-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 sm:h-20">
-            <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+      {/* Header */}
+      <header className="sticky top-0 z-40 bg-slate-900/98 backdrop-blur-lg border-b border-slate-700/50 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                My Projects
+              </h1>
+            </div>
+            <div className="text-lg font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
               AM
             </div>
-            
-            {/* Desktop Menu */}
-            <div className="hidden md:flex space-x-8">
-              {['home', 'about', 'projects', 'skills', 'contact'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollToSection(item)}
-                  className={`capitalize transition-colors ${
-                    activeSection === item
-                      ? 'text-cyan-400'
-                      : 'text-gray-300 hover:text-white'
-                  }`}
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-slate-900/95 backdrop-blur-lg">
-            <div className="px-4 pt-2 pb-4 space-y-2">
-              {['home', 'about', 'projects', 'skills', 'contact'].map((item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollToSection(item)}
-                  className="block w-full text-left px-4 py-2 capitalize hover:bg-slate-800 rounded transition-colors"
-                >
-                  {item}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </nav>
-
-      {/* Hero Section */}
-      <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-16">
-        {/* Animated Background */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl -top-48 -left-48 animate-pulse"></div>
-          <div className="absolute w-96 h-96 bg-blue-500/20 rounded-full blur-3xl -bottom-48 -right-48 animate-pulse" style={{animationDelay: '1s'}}></div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 relative z-10">
-          <div className="text-center">
-            {/* Profile Image Placeholder */}
-            <div className="w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-6 sm:mb-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1 animate-pulse">
-              <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-4xl sm:text-5xl font-bold">
-                AM
-              </div>
-            </div>
-
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6">
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-                Arham Mobarat
-              </span>
-            </h1>
-
-            <div className="text-lg sm:text-xl lg:text-2xl text-gray-300 mb-4 sm:mb-6 space-y-2">
-              <p className="flex items-center justify-center flex-wrap gap-2">
-                <span className="inline-block px-3 py-1 bg-slate-800/50 rounded-full text-sm sm:text-base">
-                  BSc Mechanical Engineering Technology
-                </span>
-              </p>
-              <p className="text-cyan-400 font-semibold">University of Greenwich • Year 2</p>
-            </div>
-
-            <p className="text-base sm:text-xl text-gray-400 max-w-2xl mx-auto mb-8 sm:mb-12 px-4">
-              Aspiring engineer passionate about building anything and everything. 
-              Turning ideas into reality through design, innovation, and problem-solving.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center px-4">
-              <button
-                onClick={() => scrollToSection('projects')}
-                className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all transform hover:scale-105"
-              >
-                View My Work
-              </button>
-              <button
-                onClick={() => scrollToSection('contact')}
-                className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-cyan-500 rounded-full font-semibold hover:bg-cyan-500/10 transition-all"
-              >
-                Get In Touch
-              </button>
-            </div>
-
-            {/* Social Links */}
-            <div className="flex justify-center gap-4 sm:gap-6 mt-8 sm:mt-12">
-              <a href="#" className="p-2 sm:p-3 bg-slate-800 rounded-full hover:bg-slate-700 transition-colors">
-                <Github size={20} className="sm:w-6 sm:h-6" />
-              </a>
-              <a href="#" className="p-2 sm:p-3 bg-slate-800 rounded-full hover:bg-slate-700 transition-colors">
-                <Linkedin size={20} className="sm:w-6 sm:h-6" />
-              </a>
-              <a href="#" className="p-2 sm:p-3 bg-slate-800 rounded-full hover:bg-slate-700 transition-colors">
-                <Mail size={20} className="sm:w-6 sm:h-6" />
-              </a>
+        
+        {/* Category Tabs - Scrollable on mobile */}
+        <div className="border-t border-slate-700/30">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex gap-2 overflow-x-auto py-3 scrollbar-hide">
+              {categories.map((category) => {
+                const Icon = category.icon;
+                const isActive = activeCategory === category.id;
+                
+                return (
+                  <button
+                    key={category.id}
+                    onClick={() => {
+                      setActiveCategory(category.id);
+                      setExpandedProject(null);
+                    }}
+                    className={`
+                      flex items-center gap-2 px-4 py-2 rounded-full font-medium transition-all duration-300 whitespace-nowrap text-sm
+                      ${isActive 
+                        ? 'bg-gradient-to-r from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/30' 
+                        : 'bg-slate-800/80 hover:bg-slate-700 border border-slate-600'
+                      }
+                    `}
+                  >
+                    {Icon && <Icon size={16} />}
+                    <span>{category.name}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
+      </header>
 
-        {/* Scroll Indicator */}
-        <button
-          onClick={() => scrollToSection('about')}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce"
-        >
-          <ChevronDown size={32} className="text-cyan-400" />
-        </button>
-      </section>
-
-      {/* About Section */}
-      <section id="about" className="py-16 sm:py-20 bg-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-8 sm:mb-12">
-            About <span className="text-cyan-400">Me</span>
-          </h2>
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-base sm:text-lg text-gray-300 mb-6 leading-relaxed">
-              I'm a second-year Mechanical Engineering Technology student at University of Greenwich, 
-              driven by a passion for creating innovative solutions to real-world problems.
-            </p>
-            <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
-              My journey in engineering combines theoretical knowledge with hands-on experience in 
-              3D modelling, circuit design, and prototype development. I believe in the power of 
-              engineering to transform ideas into tangible solutions that make a difference.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects" className="py-16 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-8 sm:mb-12">
-            My <span className="text-cyan-400">Projects</span>
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {projects.map((project, index) => {
-              const Icon = project.icon;
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {renderProjects().map((element, idx) => {
+            if (element.type === 'expanded') {
+              const project = element.project;
               return (
                 <div
-                  key={index}
-                  className="group relative bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 hover:transform hover:scale-105 transition-all duration-300 cursor-pointer border border-slate-700 hover:border-cyan-500"
+                  key={`expanded-${project.id}`}
+                  className="lg:col-span-2 w-full bg-slate-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-cyan-500 shadow-xl shadow-cyan-500/20 animate-in fade-in slide-in-from-top-4 duration-500"
                 >
-                  <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-gradient-to-br ${project.color} flex items-center justify-center mb-4 group-hover:rotate-6 transition-transform`}>
-                    <Icon size={24} className="sm:w-8 sm:h-8" />
+                  <div className="relative h-96 overflow-hidden">
+                    <img 
+                      src={project.image} 
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      onClick={() => toggleExpand(project.id)}
+                      className="absolute top-4 right-4 p-3 bg-slate-900/90 backdrop-blur-sm rounded-full hover:bg-slate-900 transition-all hover:scale-110"
+                    >
+                      <X size={24} />
+                    </button>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900 via-slate-900/80 to-transparent p-8">
+                      <h2 className="text-4xl font-bold text-white mb-2">{project.title}</h2>
+                    </div>
                   </div>
-                  <h3 className="text-lg sm:text-xl font-bold mb-2">{project.title}</h3>
-                  <p className="text-xs sm:text-sm text-cyan-400 mb-2">{project.category}</p>
-                  <p className="text-sm sm:text-base text-gray-400">{project.description}</p>
+                  
+                  <div className="p-8">
+                    <p className="text-lg text-gray-300 leading-relaxed mb-6">
+                      {project.fullDescription}
+                    </p>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {project.details.map((detail, idx) => (
+                        <div key={idx} className="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                          <p className="text-cyan-400 font-semibold">{detail}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               );
-            })}
-          </div>
-        </div>
-      </section>
+            } else {
+              // Normal project card
+              const project = element.project;
+              const isExpanded = expandedProject === project.id;
+              return (
+                <div
+                  key={project.id}
+                  className={`
+                    group bg-slate-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-slate-700 
+                    hover:border-cyan-500 transition-all duration-500
+                    ${isExpanded ? 'ring-2 ring-cyan-500' : 'hover:shadow-xl hover:shadow-cyan-500/20'}
+                  `}
+                >
+                  <div className="relative h-64 overflow-hidden">
+                    <img 
+                      src={project.image} 
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/50 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="text-2xl font-bold text-white mb-1 group-hover:text-cyan-400 transition-colors">
+                        {project.title}
+                      </h3>
+                    </div>
+                  </div>
 
-      {/* Skills Section */}
-      <section id="skills" className="py-16 sm:py-20 bg-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-8 sm:mb-12">
-            My <span className="text-cyan-400">Skills</span>
-          </h2>
-          <div className="max-w-3xl mx-auto space-y-6">
-            {skills.map((skill, index) => (
-              <div key={index}>
-                <div className="flex justify-between mb-2">
-                  <span className="text-base sm:text-lg font-semibold">{skill.name}</span>
-                  <span className="text-cyan-400">{skill.level}%</span>
+                  <div className="p-6">
+                    <p className="text-cyan-400 font-semibold mb-2">{project.subtitle}</p>
+                    <p className="text-gray-400 mb-6">{project.description}</p>
+                    
+                    <button
+                      onClick={() => toggleExpand(project.id)}
+                      className="w-full px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all transform hover:scale-105 flex items-center justify-center gap-2"
+                    >
+                      View
+                      <ChevronDown size={18} />
+                    </button>
+                  </div>
                 </div>
-                <div className="h-3 bg-slate-700 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-1000"
-                    style={{ width: `${skill.level}%` }}
-                  ></div>
-                </div>
-              </div>
-            ))}
-          </div>
+              );
+            }
+          })}
         </div>
-      </section>
 
-      {/* Contact Section */}
-      <section id="contact" className="py-16 sm:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-8 sm:mb-12">
-            Get In <span className="text-cyan-400">Touch</span>
-          </h2>
-          <div className="max-w-2xl mx-auto">
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <input
-                  type="text"
-                  placeholder="Your Name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors"
-                />
-                <input
-                  type="email"
-                  placeholder="Your Email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors"
-                />
-              </div>
-              <input
-                type="text"
-                placeholder="Subject"
-                value={formData.subject}
-                onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors"
-              />
-              <textarea
-                placeholder="Your Message"
-                value={formData.message}
-                onChange={(e) => setFormData({...formData, message: e.target.value})}
-                rows="6"
-                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors resize-none"
-              ></textarea>
-              
-              {formStatus === 'success' && (
-                <p className="text-green-400 text-center">Message sent successfully!</p>
-              )}
-              {formStatus === 'error' && (
-                <p className="text-red-400 text-center">Failed to send. Please configure EmailJS.</p>
-              )}
-              
-              <button
-                onClick={handleSubmit}
-                disabled={formStatus === 'sending'}
-                className="w-full px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                <Send size={20} />
-                {formStatus === 'sending' ? 'Sending...' : 'Send Message'}
-              </button>
-            </div>
-            
-            <p className="text-center text-gray-400 text-sm mt-6">
-              {/* Note: To activate the contact form, replace the EmailJS credentials in the code with your own. */}
-            </p>
+        {filteredProjects.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-gray-400 text-xl">No projects found in this category</p>
           </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-8 bg-slate-900/50 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400">
-          <p className="text-sm sm:text-base">© 2026 Arham Mobarat. Building the future, one project at a time.</p>
-        </div>
-      </footer>
+        )}
+      </main>
     </div>
   );
 }
