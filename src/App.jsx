@@ -123,7 +123,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 sm:h-20">
             <div className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-              NS
+              AM
             </div>
             
             {/* Desktop Menu */}
@@ -184,13 +184,13 @@ export default function App() {
             {/* Profile Image Placeholder */}
             <div className="w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-6 sm:mb-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-600 p-1 animate-pulse">
               <div className="w-full h-full rounded-full bg-slate-800 flex items-center justify-center text-4xl sm:text-5xl font-bold">
-                NS
+                AM
               </div>
             </div>
 
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold mb-4 sm:mb-6">
               <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
-                Naruto Shippudin
+                Arham Mobarat
               </span>
             </h1>
 
@@ -200,7 +200,7 @@ export default function App() {
                   BSc Mechanical Engineering Technology
                 </span>
               </p>
-              <p className="text-cyan-400 font-semibold">Raven's Bourne University • Year 3</p>
+              <p className="text-cyan-400 font-semibold">University of Greenwich • Year 2</p>
             </div>
 
             <p className="text-base sm:text-xl text-gray-400 max-w-2xl mx-auto mb-8 sm:mb-12 px-4">
@@ -255,7 +255,7 @@ export default function App() {
           </h2>
           <div className="max-w-3xl mx-auto text-center">
             <p className="text-base sm:text-lg text-gray-300 mb-6 leading-relaxed">
-              I'm a third-year Mechanical Engineering Technology student at Raven's Bourne University, 
+              I'm a second-year Mechanical Engineering Technology student at University of Greenwich, 
               driven by a passion for creating innovative solutions to real-world problems.
             </p>
             <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
@@ -376,7 +376,7 @@ export default function App() {
             </div>
             
             <p className="text-center text-gray-400 text-sm mt-6">
-              Note: To activate the contact form, replace the EmailJS credentials in the code with your own.
+              {/* Note: To activate the contact form, replace the EmailJS credentials in the code with your own. */}
             </p>
           </div>
         </div>
@@ -385,7 +385,7 @@ export default function App() {
       {/* Footer */}
       <footer className="py-8 bg-slate-900/50 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400">
-          <p className="text-sm sm:text-base">© 2026 Naruto Shippudin. Building the future, one project at a time.</p>
+          <p className="text-sm sm:text-base">© 2026 Arham Mobarat. Building the future, one project at a time.</p>
         </div>
       </footer>
     </div>
