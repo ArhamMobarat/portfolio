@@ -52,9 +52,9 @@ export default function App() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          service_id: 'YOUR_SERVICE_ID',
-          template_id: 'YOUR_TEMPLATE_ID',
-          user_id: 'YOUR_PUBLIC_KEY',
+          service_id: 'service_zbqgrk8',
+          template_id: 'template_e5xhmtb',
+          user_id: 'AgRIIQTGiGlh_8A8s',
           template_params: {
             from_name: formData.name,
             from_email: formData.email,
