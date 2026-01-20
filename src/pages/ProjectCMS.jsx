@@ -1,6 +1,6 @@
 
 // src/pages/ProjectCMS.jsx
-// import Papa from 'papaparse';
+import Papa from 'papaparse';
 import React, { useState, useEffect, useMemo } from 'react';
 import { X, Box, Cpu, FileText, Wrench, ChevronDown } from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
@@ -40,53 +40,45 @@ export default function PortfolioCMS() {
       return;
     }
 
-    const parseCSV = (csv) => {
-      const lines = csv.split('\n').map(l => l.trim()).filter(Boolean);
-      const headers = lines[0].split(',').map(h => h.trim());
-      const rows = lines.slice(1).map(line => {
-        // Simple CSV split; for more complex CSV (commas in text), use PapaParse
-        const cols = line.split(',').map(c => c.trim());
-        const obj = {};
-        headers.forEach((h, i) => obj[h] = cols[i] ?? '');
-        return obj;
-      });
-      return rows;
-    };
+    
+setLoading(true);
+    Papa.parse(CSV_URL, {
+      download: true,           // Papa will fetch the URL for you
+      header: true,             // first row becomes keys
+      skipEmptyLines: 'greedy', // ignore stray blank lines
+      dynamicTyping: false,     // keep strings as strings
+      worker: true,             // parse in a Web Worker (non-blocking)
+      // encoding: 'utf-8',     // optional; Google CSV uses utf-8 by default
+      complete: (results) => {
+        // results.data is an array of objects keyed by header
+        const rows = (results.data || []).filter(Boolean);
 
-    const toProject = (row) => {
-      // shape & fallbacks
-      return {
-        id: Number(row.id) || crypto.randomUUID(),
-        category: (row.category || 'engineering').trim(),
-        title: row.title || 'Untitled',
-        subtitle: row.subtitle || '',
-        description: row.description || '',
-        image: row.image || 'https://picsum.photos/800/600?grayscale',
-        fullDescription: row.fullDescription || '',
-        details: (row.details || '')
-          .split(';')
-          .map(s => s.trim())
-          .filter(Boolean)
-      };
-    };
+        const mapped = rows.map((row) => ({
+          id: Number(row.id) || crypto.randomUUID(),
+          category: (row.category || 'engineering').trim(),
+          title: row.title || 'Untitled',
+          subtitle: row.subtitle || '',
+          description: row.description || '',
+          image: row.image || 'https://picsum.photos/800/600?grayscale',
+          fullDescription: row.fullDescription || '',
+          // allow details to contain commas in cells by using semicolon as your separator in the sheet
+          details: (row.details || '')
+            .split(';')
+            .map(s => s.trim())
+            .filter(Boolean),
+        }));
 
-    (async () => {
-      try {
-        setLoading(true);
-        const res = await fetch(CSV_URL, { cache: 'no-store' });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const csv = await res.text();
-        const rows = parseCSV(csv);
-        const mapped = rows.map(toProject);
         setProjects(mapped);
-      } catch (e) {
-        console.error(e);
-        setError('Failed to load projects from Google Sheets.');
-      } finally {
         setLoading(false);
-      }
-    })();
+      },
+      error: (err) => {
+        console.error(err);
+        setError('Failed to parse CSV from Google Sheets.');
+        setLoading(false);
+      },
+    });
   }, []);
+
 
   const filteredProjects = useMemo(() => {
     if (activeCategory === 'all') return projects;
