@@ -66,6 +66,11 @@ setLoading(true);
             .split(';')
             .map(s => s.trim())
             .filter(Boolean),
+            
+          // NEW
+            videoUrl: row.videoUrl?.trim() || null,
+            modelUrl: row.modelUrl?.trim() || null,
+
         }));
 
         setProjects(mapped);
@@ -88,6 +93,24 @@ setLoading(true);
   const toggleExpand = (projectId) => {
     setExpandedProject(expandedProject === projectId ? null : projectId);
   };
+
+  // ------------Ytube url ---------------------
+
+  
+  const getYouTubeEmbedUrl = (url) => {
+    if (!url) return null;
+
+    // Match typical YouTube formats
+    const regex = /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?/]+)/;
+    const match = url.match(regex);
+
+    if (!match || !match[1]) return null;
+
+    const videoId = match[1];
+    return `https://www.youtube.com/embed/${videoId}`;
+  };
+  ``
+
 
   const renderProjects = () => {
     const elements = [];
@@ -169,7 +192,67 @@ setLoading(true);
                         </div>
                       </div>
                       <div className="p-8">
+                        {/* ---------------------------------------video section-------------------- */}
+                        
+                        
+                        {/* Video Section */}
+                        {project.videoUrl && (
+                          <div className="mb-10">
+                            <h3 className="text-2xl font-bold text-cyan-400 mb-4">Project Video</h3>
+
+                            {/* If YouTube */}
+                            {getYouTubeEmbedUrl(project.videoUrl) ? (
+                              <div className="relative w-full overflow-hidden rounded-xl pb-[56.25%] border border-slate-700 shadow-lg">
+                                <iframe
+                                  src={getYouTubeEmbedUrl(project.videoUrl)}
+                                  title="YouTube video player"
+                                  className="absolute top-0 left-0 w-full h-full rounded-xl"
+                                  frameBorder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                ></iframe>
+                              </div>
+                            ) : (
+                              // If MP4 or other video file
+                              <video
+                                controls
+                                className="w-full rounded-xl border border-slate-700 shadow-lg"
+                              >
+                                <source src={project.videoUrl} type="video/mp4" />
+                                Your browser does not support the video tag.
+                              </video>
+                            )}
+                          </div>
+                        )}
+
+
+
+                        {/* -------------------------------------------- */}
+                        
+
+                        
+
+                        
+                        {project.modelUrl && (
+                          <div className="mb-10">
+                            <h3 className="text-2xl font-bold text-green-400 mb-4">3D Model Preview</h3>
+
+                            <model-viewer
+                              src={project.modelUrl}
+                              alt="3D model"
+                              camera-controls
+                              auto-rotate
+                              shadow-intensity="1"
+                              className="w-full h-[500px] rounded-xl border border-slate-700 shadow-lg"
+                            ></model-viewer>
+                          </div>
+                        )}
+
+
+                        {/* --------------------------------------------------------------- */}
+
                         <p className="text-lg text-gray-300 leading-relaxed mb-6">{project.fullDescription}</p>
+
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {project.details.map((detail, idx) => (
                             <div key={idx} className="bg-slate-900/50 rounded-lg p-4 border border-slate-700">
