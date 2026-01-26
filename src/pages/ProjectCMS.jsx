@@ -2,13 +2,22 @@
 // src/pages/ProjectCMS.jsx
 import Papa from 'papaparse';
 import React, { useState, useEffect, useMemo } from 'react';
-import { X, Box, Cpu, FileText, Wrench, ChevronDown } from 'lucide-react';
+import { X, Box, Cpu, FileText, Wrench, ChevronDown, Send} from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 
 export default function PortfolioCMS() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const categoryFromURL = searchParams.get('category');
+
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [formStatus, setFormStatus] = useState('');
 
   const [activeCategory, setActiveCategory] = useState('all');
   const [expandedProject, setExpandedProject] = useState(null);
@@ -72,8 +81,8 @@ setLoading(true);
             modelUrl: row.modelUrl?.trim() || null,
 
         }));
-
-        setProjects(mapped);
+        const reversed = mapped.reverse();
+        setProjects(reversed);
         setLoading(false);
       },
       error: (err) => {
@@ -84,6 +93,46 @@ setLoading(true);
     });
   }, []);
 
+  // ----------------------------------------------
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setFormStatus('sending');
+
+    try {
+      const response = await fetch(
+        'https://api.emailjs.com/api/v1.0/email/send',
+        {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json' 
+          },
+          body: JSON.stringify({
+            service_id: 'service_zbqgrk8',
+            template_id: 'template_e5xhmtb',
+            user_id: 'AgRIIQTGiGlh_8A8s',
+            template_params: {
+              from_name: formData.name,
+              from_email: formData.email,
+              subject: formData.subject,
+              message: formData.message
+            }
+          })
+        }
+      );
+
+      if (response.ok) {
+        setFormStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setTimeout(() => setFormStatus(''), 3000);
+      } else {
+        setFormStatus('error');
+      }
+    } catch {
+      setFormStatus('error');
+    }
+  };
+
+  // --------------------------------------------------
 
   const filteredProjects = useMemo(() => {
     if (activeCategory === 'all') return projects;
@@ -109,7 +158,7 @@ setLoading(true);
     const videoId = match[1];
     return `https://www.youtube.com/embed/${videoId}`;
   };
-  ``
+  
 
 
   const renderProjects = () => {
@@ -299,6 +348,75 @@ setLoading(true);
           </>
         )}
       </main>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-16 sm:py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-8 sm:mb-12">
+            Get In <span className="text-cyan-400">Touch</span>
+          </h2>
+          <div className="max-w-2xl mx-auto">
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors"
+                />
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors"
+                />
+              </div>
+              <input
+                type="text"
+                placeholder="Subject"
+                value={formData.subject}
+                onChange={(e) => setFormData({...formData, subject: e.target.value})}
+                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors"
+              />
+              <textarea
+                placeholder="Your Message"
+                value={formData.message}
+                onChange={(e) => setFormData({...formData, message: e.target.value})}
+                rows="6"
+                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors resize-none"
+              ></textarea>
+              
+              {formStatus === 'success' && (
+                <p className="text-green-400 text-center">Message sent successfully!</p>
+              )}
+              {formStatus === 'error' && (
+                <p className="text-red-400 text-center">Failed to send. Please configure EmailJS.</p>
+              )}
+              
+              <button
+                onClick={handleSubmit}
+                disabled={formStatus === 'sending'}
+                className="w-full px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <Send size={20} />
+                {formStatus === 'sending' ? 'Sending...' : 'Send Message'}
+              </button>
+            </div>
+            
+            <p className="text-center text-gray-400 text-sm mt-6">
+              {/* Note: To activate the contact form, replace the EmailJS credentials in the code with your own. */}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="py-8 text-center text-gray-400 border-t border-slate-800">
+        © 2026 Arham Mobarat
+      </footer>
+
     </div>
   );
 }
