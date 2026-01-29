@@ -22,6 +22,8 @@ export default function PortfolioCMS() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [expandedProject, setExpandedProject] = useState(null);
 
+  const [errors, setErrors] = useState({});
+
   // NEW STATE
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -109,9 +111,37 @@ setLoading(true);
   }, []);
 
   // ----------------------------------------------
+
+  const isValidGmail = (email) => {
+    const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+    return gmailRegex.test(email);
+  };
+// ----------------------------------------------------
   const handleSubmit = async e => {
     e.preventDefault();
+    const newErrors = {};
+
+    // Check empty fields
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    if (!formData.subject.trim()) newErrors.subject = 'Subject is required';
+    if (!formData.message.trim()) newErrors.message = 'Message is required';
+
+    // Check Gmail validity
+    if (formData.email && !isValidGmail(formData.email)) {
+      newErrors.email = 'Please enter a valid Gmail address';
+    }
+
+    // If there are errors, stop submission
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    // Clear errors and continue
+    setErrors({});
     setFormStatus('sending');
+
 
     try {
       const response = await fetch(
@@ -390,6 +420,10 @@ setLoading(true);
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors"
                 />
+                {errors.name && (
+                  <p className="text-red-400 text-sm mt-1">{errors.name}</p>
+                )}
+
                 <input
                   type="email"
                   placeholder="Your Email"
@@ -397,6 +431,10 @@ setLoading(true);
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
                   className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors"
                 />
+                {errors.email && (
+                  <p className="text-red-400 text-sm mt-1">{errors.email}</p>
+                )}
+
               </div>
               <input
                 type="text"
@@ -405,6 +443,10 @@ setLoading(true);
                 onChange={(e) => setFormData({...formData, subject: e.target.value})}
                 className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors"
               />
+              {errors.subject && (
+                <p className="text-red-400 text-sm mt-1">{errors.subject}</p>
+              )}
+
               <textarea
                 placeholder="Your Message"
                 value={formData.message}
@@ -412,7 +454,10 @@ setLoading(true);
                 rows="6"
                 className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-lg focus:border-cyan-500 focus:outline-none transition-colors resize-none"
               ></textarea>
-              
+              {errors.message && (
+                <p className="text-red-400 text-sm mt-1">{errors.message}</p>
+              )}
+
               {formStatus === 'success' && (
                 <p className="text-green-400 text-center">Message sent successfully!</p>
               )}
@@ -422,7 +467,14 @@ setLoading(true);
               
               <button
                 onClick={handleSubmit}
-                disabled={formStatus === 'sending'}
+                disabled={
+                  formStatus === 'sending' ||
+                  !formData.name ||
+                  !formData.email ||
+                  !formData.subject ||
+                  !formData.message
+                }
+
                 className="w-full px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <Send size={20} />
