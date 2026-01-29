@@ -77,8 +77,23 @@ setLoading(true);
             .filter(Boolean),
             
           // NEW
-            videoUrl: row.videoUrl?.trim() || null,
-            modelUrl: row.modelUrl?.trim() || null,
+          videoUrl: row.videoUrl?.trim() || null,
+          modelUrl: row.modelUrl?.trim() || null,
+
+          // new part of the img and p 
+          blocks: [
+            row.img1 && { type: 'image', value: row.img1 },
+            row.p1 && { type: 'text', value: row.p1 },
+            row.img2 && { type: 'image', value: row.img2 },
+            row.p2 && { type: 'text', value: row.p2 },
+            row.img3 && { type: 'image', value: row.img3 },
+            row.p3 && { type: 'text', value: row.p3 },
+            row.img4 && { type: 'image', value: row.img4 },
+            row.p4 && { type: 'text', value: row.p4 },
+            row.img5 && { type: 'image', value: row.img5 },
+            row.p5 && { type: 'text', value: row.p5 }
+          ].filter(Boolean)
+
 
         }));
         const reversed = mapped.reverse();
@@ -298,6 +313,16 @@ setLoading(true);
                         )}
 
 
+                        {/* ------------------------------Code Block for the image and paragraphs--------------------------------- */}
+                        {project.blocks.map((block, i) => (
+                          block.type === 'image' ? (
+                            <img key={i} src={block.value} className="w-full rounded-lg mb-6" />
+                          ) : (
+                            <p key={i} className="text-gray-300 text-lg mb-6 leading-relaxed">{block.value}</p>
+                          )
+                        ))}
+
+                        
                         {/* --------------------------------------------------------------- */}
 
                         <p className="text-lg text-gray-300 leading-relaxed mb-6">{project.fullDescription}</p>
