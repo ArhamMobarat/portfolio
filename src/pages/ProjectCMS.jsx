@@ -2,7 +2,7 @@
 // src/pages/ProjectCMS.jsx
 import Papa from 'papaparse';
 import React, { useState, useEffect, useMemo } from 'react';
-import { X, Box, Cpu, FileText, Wrench, ChevronDown, Send} from 'lucide-react';
+import { X, Box, Cpu, FileText, Wrench, ChevronDown, Send, Globe} from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 
 export default function PortfolioCMS() {
@@ -39,7 +39,7 @@ export default function PortfolioCMS() {
     { id: '3d-modeling', name: '3D Modeling', icon: Box, color: 'from-blue-500 to-cyan-500' },
     { id: 'electronics', name: 'Electronics', icon: Cpu, color: 'from-purple-500 to-pink-500' },
     { id: 'documentation', name: 'Documentation', icon: FileText, color: 'from-orange-500 to-red-500' },
-    { id: 'engineering', name: 'Engineering', icon: Wrench, color: 'from-green-500 to-emerald-500' }
+    { id: 'website', name: 'Website', icon: Globe, color: 'from-indigo-500 to-purple-500' }
   ]), []);
 
   // ---- CSV FETCH + PARSER ----

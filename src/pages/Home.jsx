@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Mail, Github, Linkedin, Download, ChevronDown, Wrench, Cpu, Box, FileText, Send } from 'lucide-react';
+import { Menu, X, Mail, Github, Linkedin, Download, ChevronDown, Wrench, Cpu, Box, FileText, Send, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
@@ -21,8 +21,9 @@ export default function Home() {
     '3D Modelling': '3d-modeling',
     Electronics: 'electronics',
     Documentation: 'documentation',
-    Engineering: 'engineering'
+    Website: 'website'
   };
+
 
 
   // email error handling 
@@ -146,12 +147,13 @@ export default function Home() {
       color: 'from-orange-500 to-red-500'
     },
     {
-      title: 'Prototype Development',
-      category: 'Engineering',
-      icon: Wrench,
-      description: 'From concept to working prototype',
-      color: 'from-green-500 to-emerald-500'
+      title: 'Websites',
+      category: 'Website',
+      icon: Globe,
+      description: 'Modern, responsive websites and web apps',
+      color: 'from-indigo-500 to-purple-500'
     }
+
   ];
 
   const skills = [
@@ -275,12 +277,19 @@ export default function Home() {
               <a href="#" className="p-2 sm:p-3 bg-slate-800 rounded-full hover:bg-slate-700 transition-colors">
                 <Github size={20} className="sm:w-6 sm:h-6" />
               </a>
-              <a href="#" className="p-2 sm:p-3 bg-slate-800 rounded-full hover:bg-slate-700 transition-colors">
+              <a href="https://www.linkedin.com/in/arham-mobarat-63a47334a/" className="p-2 sm:p-3 bg-slate-800 rounded-full hover:bg-slate-700 transition-colors" target ="blank">
                 <Linkedin size={20} className="sm:w-6 sm:h-6" />
               </a>
-              <a href="#" className="p-2 sm:p-3 bg-slate-800 rounded-full hover:bg-slate-700 transition-colors">
+              <a
+                href="mailto:arhammob566@gmail.com?subject=Portfolio%20Contact&body=Hi%20Arham,%0A%0AI%20found%20your%20portfolio%20and%20would%20like%20to%20get%20in%20touch."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 sm:p-3 bg-slate-800 rounded-full hover:bg-slate-700 transition-colors"
+                title="Email me directly"
+              >
                 <Mail size={20} className="sm:w-6 sm:h-6" />
               </a>
+
             </div>
           </div>
         </div>
@@ -307,7 +316,7 @@ export default function Home() {
             </p>
             <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
               My journey in engineering combines theoretical knowledge with hands-on experience in 
-              3D modelling, circuit design, and prototype development. I believe in the power of 
+              3D modelling, circuit design, and Website Development. I believe in the power of 
               engineering to transform ideas into tangible solutions that make a difference.
             </p>
           </div>
