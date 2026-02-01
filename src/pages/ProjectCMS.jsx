@@ -342,7 +342,7 @@ setLoading(true);
                           </div>
                         )}
 
-
+                        <p className="text-lg text-gray-300 leading-relaxed mb-6">{project.fullDescription}</p>
                         {/* ------------------------------Code Block for the image and paragraphs--------------------------------- */}
                         {project.blocks.map((block, i) => (
                           block.type === 'image' ? (
@@ -355,7 +355,7 @@ setLoading(true);
                         
                         {/* --------------------------------------------------------------- */}
 
-                        <p className="text-lg text-gray-300 leading-relaxed mb-6">{project.fullDescription}</p>
+
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {project.details.map((detail, idx) => (
