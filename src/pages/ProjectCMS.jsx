@@ -211,6 +211,15 @@ setLoading(true);
   };
   
 
+  const copyCodeToClipboard = async (code) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      alert('Code copied to clipboard!');
+    } catch {
+      alert('Failed to copy code');
+    }
+  };
+
 
   const renderProjects = () => {
     const elements = [];
@@ -374,27 +383,49 @@ setLoading(true);
 
                           if (block.type === 'code') {
                             return (
-                              <div key={i} className="mb-8 rounded-xl overflow-hidden border border-slate-700">
-                                <div className="px-4 py-2 bg-slate-900 text-sm text-cyan-400 font-mono">
-                                  {block.language}
+                              <div
+                                key={i}
+                                className="mb-8 rounded-xl overflow-hidden border border-slate-700 bg-slate-900"
+                              >
+                                {/* Header */}
+                                <div className="flex items-center justify-between px-4 py-2 bg-slate-800 border-b border-slate-700">
+                                  <span className="text-sm font-mono text-cyan-400">
+                                    {block.language}
+                                  </span>
+
+                                  <button
+                                    onClick={() => copyCodeToClipboard(block.value)}
+                                    className="text-sm px-3 py-1 rounded bg-slate-700 hover:bg-slate-600 transition text-gray-200"
+                                  >
+                                    Copy
+                                  </button>
                                 </div>
 
-                                <SyntaxHighlighter
-                                  language={block.language}
-                                  style={oneDark}
-                                  showLineNumbers
-                                  customStyle={{
-                                    margin: 0,
-                                    padding: '1.25rem',
-                                    background: 'transparent',
-                                    fontSize: '0.9rem'
+                                {/* Scrollable code area */}
+                                <div
+                                  style={{
+                                    maxHeight: '420px',   // 👈 LIMIT HEIGHT (~27 lines)
+                                    overflowY: 'auto'
                                   }}
                                 >
-                                  {block.value}
-                                </SyntaxHighlighter>
+                                  <SyntaxHighlighter
+                                    language={block.language}
+                                    style={oneDark}
+                                    showLineNumbers
+                                    customStyle={{
+                                      margin: 0,
+                                      background: 'transparent',
+                                      fontSize: '0.9rem',
+                                      lineHeight: '1.4'
+                                    }}
+                                  >
+                                    {block.value}
+                                  </SyntaxHighlighter>
+                                </div>
                               </div>
                             );
                           }
+
 
                           return null;
                         })}
