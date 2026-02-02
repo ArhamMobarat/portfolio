@@ -5,6 +5,10 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { X, Box, Cpu, FileText, Wrench, ChevronDown, Send, Globe} from 'lucide-react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+
 export default function PortfolioCMS() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -93,7 +97,9 @@ setLoading(true);
             row.img4 && { type: 'image', value: row.img4 },
             row.p4 && { type: 'text', value: row.p4 },
             row.img5 && { type: 'image', value: row.img5 },
-            row.p5 && { type: 'text', value: row.p5 }
+            row.p5 && { type: 'text', value: row.p5 },
+            row.code1 && { type: 'code', value: row.code1, language: row.code1Lang || 'javascript'},  
+            row.code2 && { type: 'code', value: row.code2, language: row.code2Lang || 'javascript'},
           ].filter(Boolean)
 
 
@@ -344,13 +350,55 @@ setLoading(true);
 
                         <p className="text-lg text-gray-300 leading-relaxed mb-6">{project.fullDescription}</p>
                         {/* ------------------------------Code Block for the image and paragraphs--------------------------------- */}
-                        {project.blocks.map((block, i) => (
-                          block.type === 'image' ? (
-                            <img key={i} src={block.value} className="w-full rounded-lg mb-6" />
-                          ) : (
-                            <p key={i} className="text-gray-300 text-lg mb-6 leading-relaxed">{block.value}</p>
-                          )
-                        ))}
+                        {project.blocks.map((block, i) => {
+                          if (block.type === 'image') {
+                            return (
+                              <img
+                                key={i}
+                                src={block.value}
+                                className="w-full rounded-lg mb-6"
+                              />
+                            );
+                          }
+
+                          if (block.type === 'text') {
+                            return (
+                              <p
+                                key={i}
+                                className="text-gray-300 text-lg mb-6 leading-relaxed"
+                              >
+                                {block.value}
+                              </p>
+                            );
+                          }
+
+                          if (block.type === 'code') {
+                            return (
+                              <div key={i} className="mb-8 rounded-xl overflow-hidden border border-slate-700">
+                                <div className="px-4 py-2 bg-slate-900 text-sm text-cyan-400 font-mono">
+                                  {block.language}
+                                </div>
+
+                                <SyntaxHighlighter
+                                  language={block.language}
+                                  style={oneDark}
+                                  showLineNumbers
+                                  customStyle={{
+                                    margin: 0,
+                                    padding: '1.25rem',
+                                    background: 'transparent',
+                                    fontSize: '0.9rem'
+                                  }}
+                                >
+                                  {block.value}
+                                </SyntaxHighlighter>
+                              </div>
+                            );
+                          }
+
+                          return null;
+                        })}
+
 
                         
                         {/* --------------------------------------------------------------- */}
